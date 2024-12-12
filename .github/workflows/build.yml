@@ -1,0 +1,71 @@
+name: Build Graveyard Kernel
+on: [push, pull_request, workflow_dispatch]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      CCACHE_COMPILERCHECK: "%compiler% -dumpmachine; %compiler% -dumpversion"
+      CCACHE_NOHASHDIR: "true"
+      CCACHE_MAXSIZE: "4G"
+      CCACHE_HARDLINK: "true"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          submodules: 'true'
+          fetch-depth: 1
+
+      - name: Set up Git config
+        run: |
+          git config --global user.name "MAdMiZ"
+          git config --global user.email "mizdrake7@gmail.com"
+
+      - name: Set up ccache
+        uses: hendrikmuhs/ccache-action@v1.2
+
+      - name: Install dependencies
+        id: version
+        run: |
+          echo -e "\nInstalling required packages and toolchains...\n"
+          sudo apt-get update -y && sudo apt-get install -y \
+              bc \
+              bison \
+              build-essential \
+              cpio \
+              device-tree-compiler \
+              flex \
+              gcc-aarch64-linux-gnu \
+              gcc-arm-linux-gnueabi \
+              git \
+              git-lfs \
+              llvm \
+              make \
+              mkbootimg \
+              python2 \
+              python3 \
+              unzip \
+              xz-utils \
+              ca-certificates \
+              libssl-dev \
+              binutils \
+              curl \
+              wget \
+              jq || {
+              echo -e "\nFailed to install required packages. Exiting...\n"; exit 1;
+          }
+
+          # Install LLVM if not present or outdated
+          if ! command -v clang &> /dev/null || [[ $(clang --version | grep -oP '\d+' | head -1) -lt $LLVM_VERSION ]]; then
+              echo -e "\nInstalling LLVM $LLVM_VERSION...\n"
+              sudo bash -c "$(wget -O - https://apt.llvm.org/llvm.sh)" $LLVM_VERSION || {
+                  echo -e "\nFailed to install LLVM $LLVM_VERSION. Exiting...\n"; exit 1;
+              }
+          else
+              echo -e "\nLLVM $LLVM_VERSION is already installed.\n"
+          fi
+
+      - name: Build Kernel
+        run: |
+           bash build.sh
