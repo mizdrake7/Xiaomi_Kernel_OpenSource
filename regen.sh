@@ -1,1 +1,1 @@
-export ARCH=arm64 && export SUBARCH=arm64 && make defconfig && mv .config arch/arm64/configs/defconfig && git add arch/arm64/configs/defconfig && git commit -m "defconfig: Regen" -s
+export ARCH=arm64 && export SUBARCH=arm64 && make air_defconfig && mv .config arch/arm64/configs/air_defconfig && git add arch/arm64/configs/air_defconfig && git commit -m "air_defconfig: Regen" -s

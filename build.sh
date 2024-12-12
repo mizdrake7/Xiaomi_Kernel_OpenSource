@@ -8,7 +8,7 @@ SECONDS=0
 TZ=Asia/Kolkata
 ZIPNAME="Graveyard-v1-air-$(date '+%Y%m%d-%H%M').zip"
 AK3_DIR="$HOME/android/AnyKernel3"
-DEFCONFIG="defconfig"
+DEFCONFIG="air_defconfig"
 LLVM_VERSION=18
 
 export TZ=Asia/Kolkata
