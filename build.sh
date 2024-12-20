@@ -28,7 +28,7 @@ sudo apt-get update -y && sudo apt-get install -y \
     gcc-aarch64-linux-gnu gcc-arm-linux-gnueabi binutils make lld llvm \
     python3 libssl-dev build-essential bc bison flex unzip \
     ca-certificates xz-utils mkbootimg cpio device-tree-compiler \
-    git git-lfs curl wget jq || {
+    git git-lfs curl wget libelf-dev jq || {
     echo -e "\nFailed to install required packages. Exiting...\n"; exit 1;
 }
 
